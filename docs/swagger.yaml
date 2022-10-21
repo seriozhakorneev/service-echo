@@ -1,0 +1,9 @@
+basePath: /v1
+host: localhost:8080
+info:
+  contact: {}
+  description: JSON reflecting service with overwriting mechanisms
+  title: Service Echo API
+  version: "1.0"
+paths: {}
+swagger: "2.0"
