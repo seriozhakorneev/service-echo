@@ -9,9 +9,10 @@ import (
 type (
 	// Config -.
 	Config struct {
-		App  `yaml:"app"`
-		HTTP `yaml:"http"`
-		Log  `yaml:"logger"`
+		App      `yaml:"app"`
+		HTTP     `yaml:"http"`
+		Log      `yaml:"logger"`
+		Rewriter `yaml:"rewriter"`
 	}
 
 	// App -.
@@ -28,6 +29,19 @@ type (
 	// Log -.
 	Log struct {
 		Level string `env-required:"true" yaml:"log_level"   env:"LOG_LEVEL"`
+	}
+
+	// Rewriter -.
+	Rewriter struct {
+		Active bool  `env-required:"true" yaml:"active"   env:"ACTIVE"`
+		Rules  Rules `yaml:"rules"`
+	}
+
+	// Rules -.
+	Rules struct {
+		Name  string `env-required:"true" yaml:"name"   env:"NAME"`
+		Value string `env-required:"true" yaml:"value"   env:"VALUE"`
+		New   string `env-required:"true" yaml:"new"   env:"NEW"`
 	}
 )
 
