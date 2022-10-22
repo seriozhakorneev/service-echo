@@ -1,9 +1,50 @@
 basePath: /v1
+definitions:
+  entity.JSONObject:
+    properties:
+      any_field:
+        example: any_value
+        type: string
+    type: object
+  v1.response:
+    properties:
+      error:
+        example: message
+        type: string
+    type: object
 host: localhost:8080
 info:
   contact: {}
   description: JSON reflecting service with overwriting mechanisms
   title: Service Echo API
   version: "1.0"
-paths: {}
+paths:
+  /echo/reflect:
+    post:
+      consumes:
+      - application/json
+      description: Reflects the received data, overwrites the data if overwrite rules
+        are active
+      operationId: reflect
+      parameters:
+      - description: Set up any json object
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/entity.JSONObject'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.JSONObject'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/v1.response'
+      summary: Reflect
+      tags:
+      - echo
 swagger: "2.0"
