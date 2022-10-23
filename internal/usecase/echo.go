@@ -2,15 +2,17 @@ package usecase
 
 // EchoUseCase -.
 type EchoUseCase struct {
-	// TODO: rewriter might be here
+	rewriter Rewriter
 }
 
 // New -.
-func New() *EchoUseCase {
-	return &EchoUseCase{}
+func New(r Rewriter) *EchoUseCase {
+	return &EchoUseCase{rewriter: r}
 }
 
-// Reflect - returns data back unchanged or rewritten if rewrite rules active.
-func (uc *EchoUseCase) Reflect(data any) any {
-	return data
+// Rewrite - runs rewriter if rewrite rules are active.
+func (uc *EchoUseCase) Rewrite(data map[string]any) {
+	if uc.rewriter != nil {
+		uc.rewriter.Rewrite(data)
+	}
 }

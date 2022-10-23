@@ -7,3 +7,10 @@ http:
 
 logger:
   log_level: 'debug'
+
+rewriter:
+  active: true
+  rules:
+    name: "pokemon"
+    value: "pikachu"
+    new: "bulbasaur"

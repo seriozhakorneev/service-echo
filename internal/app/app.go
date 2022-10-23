@@ -12,6 +12,7 @@ import (
 	"service-echo/config"
 	v1 "service-echo/internal/entrypoint/http/v1"
 	"service-echo/internal/usecase"
+	"service-echo/internal/usecase/rewriter"
 	"service-echo/pkg/httpserver"
 	"service-echo/pkg/logger"
 )
@@ -21,7 +22,7 @@ func Run(cfg *config.Config) {
 	l := logger.New(cfg.Log.Level)
 
 	// Use Case
-	echoUseCase := usecase.New()
+	echoUseCase := usecase.New(rewriter.New(cfg.Rewriter))
 
 	// HTTP Server
 	handler := gin.New()
