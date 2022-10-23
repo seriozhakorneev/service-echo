@@ -17,7 +17,7 @@ const (
 	attempts   = 20
 
 	// HTTP REST
-	// basePath = "http://" + host + "/v1"
+	basePath = "http://" + host + "/v1"
 )
 
 func TestMain(m *testing.M) {
@@ -49,4 +49,31 @@ func healthCheck(attempts int) error {
 	}
 
 	return err
+}
+
+// HTTP POST: /echo/reflect.
+func TestHTTPReflect(t *testing.T) {
+	body := `{
+		"pokemon": "pikachu"
+	}`
+	Test(t,
+		Description("Reflect Success"),
+		Post(basePath+"/echo/reflect"),
+		Send().Headers("Content-Type").Add("application/json"),
+		Send().Body().String(body),
+		Expect().Status().Equal(http.StatusOK),
+		Expect().Body().JSON().Contains("pokemon"),
+	)
+
+	body = `{
+		"destination": en,
+	}`
+	Test(t,
+		Description("Reflect Fail"),
+		Post(basePath+"/echo/reflect"),
+		Send().Headers("Content-Type").Add("application/json"),
+		Send().Body().String(body),
+		Expect().Status().Equal(http.StatusBadRequest),
+		Expect().Body().JSON().JQ(".error").Equal("invalid request body"),
+	)
 }
