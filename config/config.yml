@@ -8,8 +8,9 @@ http:
 logger:
   log_level: 'debug'
 
-rewrite_rules:
-  active: true
-  name: field_name
-  value: field_value
-  new: new_value
+rewriter:
+  active: false
+  rules:
+    name: "pokemon"
+    value: "pikachu"
+    new: "bulbasaur"

@@ -4,11 +4,11 @@ package usecase
 type (
 	// Echo -.
 	Echo interface {
-		Rewrite(any) any
+		Rewrite(m map[string]any)
 	}
 
 	// Rewriter -.
 	Rewriter interface {
-		Rewrite(m map[string]interface{})
+		Rewrite(m map[string]any)
 	}
 )

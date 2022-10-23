@@ -33,7 +33,7 @@ type (
 
 	// Rewriter -.
 	Rewriter struct {
-		Active bool  `env-required:"true" yaml:"active"   env:"ACTIVE"`
+		Active bool  `yaml:"active"   env:"ACTIVE"`
 		Rules  Rules `yaml:"rules"`
 	}
 

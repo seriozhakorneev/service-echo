@@ -2,6 +2,7 @@ package rewriter
 
 import (
 	"service-echo/config"
+	"service-echo/internal/usecase"
 )
 
 // Rewriter -.
@@ -10,15 +11,18 @@ type Rewriter struct {
 }
 
 // New -.
-func New(rules config.Rules) *Rewriter {
-	return &Rewriter{
-		rules.Name,
-		rules.Value,
-		rules.New,
+func New(cfg config.Rewriter) usecase.Rewriter {
+	if cfg.Active {
+		return &Rewriter{
+			cfg.Rules.Name,
+			cfg.Rules.Value,
+			cfg.Rules.New,
+		}
 	}
+	return nil
 }
 
-// Rewrite -.
+// Rewrite - rewrites data with rewrite rules
 func (r *Rewriter) Rewrite(m map[string]any) {
 	for key, value := range m {
 		switch vv := value.(type) {
@@ -30,13 +34,8 @@ func (r *Rewriter) Rewrite(m map[string]any) {
 		case map[string]any:
 			r.Rewrite(vv)
 		case []any:
-			for i, v := range vv {
+			for _, v := range vv {
 				switch vvv := v.(type) {
-				case string:
-					if key == r.name &&
-						vvv == r.value {
-						vv[i] = r.new
-					}
 				case map[string]any:
 					r.Rewrite(vvv)
 				}

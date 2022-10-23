@@ -10,7 +10,9 @@ func New(r Rewriter) *EchoUseCase {
 	return &EchoUseCase{rewriter: r}
 }
 
-// Rewrite - rewrites data with rewrite rules.
-func (uc *EchoUseCase) Rewrite(data any) any {
-	return data
+// Rewrite - runs rewriter if rewrite rules are active.
+func (uc *EchoUseCase) Rewrite(data map[string]any) {
+	if uc.rewriter != nil {
+		uc.rewriter.Rewrite(data)
+	}
 }

@@ -1,7 +1,6 @@
 package v1
 
 import (
-	"encoding/json"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -35,7 +34,7 @@ func newEchoRoutes(handler *gin.RouterGroup, t usecase.Echo, l logger.Interface)
 // @Failure     400 {object} response
 // @Router      /echo/reflect [post]
 func (r *EchoRoutes) reflect(c *gin.Context) {
-	var data json.RawMessage
+	var data map[string]any
 
 	err := c.BindJSON(&data)
 	if err != nil {
@@ -44,6 +43,8 @@ func (r *EchoRoutes) reflect(c *gin.Context) {
 
 		return
 	}
+
+	r.t.Rewrite(data)
 
 	c.JSON(http.StatusOK, data)
 }
