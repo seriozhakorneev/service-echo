@@ -33,16 +33,20 @@ Pair of field name and field value will be found anywhere deep in document:
 ```json
 {
   "pokemon": "pikachu",
-
+  
   "some_object": {
-    "another_object": {
+    "pokemon":"pikachu"
+  },
+  
+  "another_object": {
+    "in_object": {
       "pokemon":"pikachu"
     }
   },
   
   "some_array": [
     {
-      "another_array": [
+      "in_array": [
         {
           "pokemon": "pikachu"
         }
@@ -55,16 +59,20 @@ result:
 ```json
 {
   "pokemon": "bulbasaur",
-
+  
   "some_object": {
-    "another_object": {
+    "pokemon":"bulbasaur"
+  },
+
+  "another_object": {
+    "in_object": {
       "pokemon": "bulbasaur"
     }
   },
   
   "some_array": [
     {
-      "another_array": [
+      "in_array": [
         {
           "pokemon": "bulbasaur"
         }
