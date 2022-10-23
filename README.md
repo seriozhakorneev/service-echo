@@ -51,7 +51,7 @@ Pair of field name and field value will be found anywhere deep in document:
   ]
 }
 ```
-#### result:
+result:
 ```json
 {
   "pokemon": "bulbasaur",
