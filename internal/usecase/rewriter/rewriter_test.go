@@ -10,8 +10,11 @@ import (
 )
 
 func TestRewriter_New(t *testing.T) {
-	var expectedNil usecase.Rewriter
+	t.Parallel()
+
+	expectedNil := usecase.Rewriter(nil)
 	rewriter := New(config.Rewriter{Active: false})
+
 	if rewriter != expectedNil {
 		t.Fatalf("Expected: %v, got: %v", expectedNil, rewriter)
 	}
@@ -57,6 +60,10 @@ func TestRewriter_Rewrite(t *testing.T) {
 		{
 			[]byte(`{"field":[{"pokemon":"pikachu"},{"pokemon":"pikachu"}]}`),
 			[]byte(`{"field":[{"pokemon":"bulbasaur"},{"pokemon":"bulbasaur"}]}`),
+		},
+		{
+			[]byte(`{"field":[[[{"pokemon":"pikachu"}],[{"pokemon":"pikachu"}]]]}`),
+			[]byte(`{"field":[[[{"pokemon":"bulbasaur"}],[{"pokemon":"bulbasaur"}]]]}`),
 		},
 	}
 

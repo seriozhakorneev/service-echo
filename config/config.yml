@@ -9,7 +9,7 @@ logger:
   log_level: 'debug'
 
 rewriter:
-  active: false
+  active: true
   rules:
     name: "pokemon"
     value: "pikachu"

@@ -19,11 +19,24 @@ func New(cfg config.Rewriter) usecase.Rewriter {
 			cfg.Rules.New,
 		}
 	}
+
 	return nil
 }
 
 // Rewrite - rewrites data with rewrite rules
 func (r *Rewriter) Rewrite(m map[string]any) {
+	var arrReveal func(a []any)
+	arrReveal = func(a []any) {
+		for _, el := range a {
+			switch vv := el.(type) {
+			case []any:
+				arrReveal(vv)
+			case map[string]any:
+				r.Rewrite(vv)
+			}
+		}
+	}
+
 	for key, value := range m {
 		switch vv := value.(type) {
 		case string:
@@ -34,12 +47,7 @@ func (r *Rewriter) Rewrite(m map[string]any) {
 		case map[string]any:
 			r.Rewrite(vv)
 		case []any:
-			for _, v := range vv {
-				switch vvv := v.(type) {
-				case map[string]any:
-					r.Rewrite(vvv)
-				}
-			}
+			arrReveal(vv)
 		}
 	}
 }
