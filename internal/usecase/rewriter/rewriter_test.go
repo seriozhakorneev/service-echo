@@ -2,6 +2,8 @@ package rewriter
 
 import (
 	"encoding/json"
+	"fmt"
+	"os"
 	"reflect"
 	"testing"
 
@@ -9,34 +11,22 @@ import (
 	"service-echo/internal/usecase"
 )
 
-func TestRewriter_New(t *testing.T) {
-	t.Parallel()
+type rewriterTest struct{ input, expected []byte }
 
-	expectedNil := usecase.Rewriter(nil)
-	rewriter := New(config.Rewriter{Active: false})
+var (
+	rewriter Rewriter
+	tests    []rewriterTest
+)
 
-	if rewriter != expectedNil {
-		t.Fatalf("Expected: %v, got: %v", expectedNil, rewriter)
-	}
+func TestMain(m *testing.M) {
 
-	rewriter = New(config.Rewriter{Active: true})
-	if rewriter == nil {
-		t.Fatalf("Expected: %v, got: nil", rewriter)
-	}
-}
-
-func TestRewriter_Rewrite(t *testing.T) {
-	t.Parallel()
-
-	r := Rewriter{
+	rewriter = Rewriter{
 		name:  "pokemon",
 		value: "pikachu",
 		new:   "bulbasaur",
 	}
 
-	tests := []struct {
-		input, expected []byte
-	}{
+	tests = []rewriterTest{
 		{
 			[]byte(`{"pokemon":"pikachu"}`),
 			[]byte(`{"pokemon":"bulbasaur"}`),
@@ -67,6 +57,29 @@ func TestRewriter_Rewrite(t *testing.T) {
 		},
 	}
 
+	code := m.Run()
+	os.Exit(code)
+}
+
+func TestRewriter_New(t *testing.T) {
+	t.Parallel()
+
+	expNilInterface := usecase.Rewriter(nil)
+	rInterface := New(config.Rewriter{Active: false})
+
+	if rInterface != expNilInterface {
+		t.Fatalf("Expected: %v, got: %v", expNilInterface, rInterface)
+	}
+
+	rInterface = New(config.Rewriter{Active: true})
+	if rInterface == nil {
+		t.Fatalf("Expected: %v, got: nil", rInterface)
+	}
+}
+
+func TestRewriter_Rewrite(t *testing.T) {
+	t.Parallel()
+
 	for _, test := range tests {
 		var data map[string]any
 
@@ -75,7 +88,7 @@ func TestRewriter_Rewrite(t *testing.T) {
 			t.Fatal("Unmarshal failed:", err)
 		}
 
-		r.Rewrite(data)
+		rewriter.Rewrite(data)
 
 		test.input, err = json.Marshal(data)
 		if err != nil {
@@ -85,5 +98,22 @@ func TestRewriter_Rewrite(t *testing.T) {
 		if !reflect.DeepEqual(test.input, test.expected) {
 			t.Fatalf("Expected object: %s\n Got: %s", test.expected, test.input)
 		}
+	}
+}
+
+func BenchmarkRewriterRewrite(b *testing.B) {
+	for _, test := range tests {
+		b.Run(fmt.Sprintf("input %s", test.input), func(b *testing.B) {
+			for i := 0; i < b.N; i++ {
+				var data map[string]any
+
+				err := json.Unmarshal(test.input, &data)
+				if err != nil {
+					b.Fatal("Unmarshal failed:", err)
+				}
+
+				rewriter.Rewrite(data)
+			}
+		})
 	}
 }
