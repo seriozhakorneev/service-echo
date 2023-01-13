@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -38,7 +39,7 @@ func (r *EchoRoutes) reflect(c *gin.Context) {
 
 	err := c.BindJSON(&data)
 	if err != nil {
-		r.l.Error(err, "http - v1 - reflect")
+		r.l.Error(fmt.Errorf("http - v1 - reflect: %w", err))
 		errorResponse(c, http.StatusBadRequest, "invalid request body")
 
 		return
