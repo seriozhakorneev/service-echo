@@ -67,7 +67,6 @@ linters:
     - exportloopref
     - forbidigo
     - funlen
-    - gochecknoglobals
     - gochecknoinits
     - gocognit
     - goconst
@@ -106,6 +105,7 @@ linters:
     - whitespace
 
 # disable:
+#    - gochecknoglobals
 #    - exhaustivestruct
 #    - ifshort
 #    - goheader
