@@ -19,7 +19,6 @@ var (
 )
 
 func TestMain(m *testing.M) {
-
 	rewriter = Rewriter{
 		name:  "pokemon",
 		value: "pikachu",

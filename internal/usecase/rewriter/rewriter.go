@@ -24,32 +24,33 @@ func New(cfg config.Rewriter) usecase.Rewriter {
 }
 
 // Rewrite - rewrites data with rewrite rules
-func (r *Rewriter) Rewrite(m map[string]any) {
-	// TODO вынести
-	var arrReveal func(a []any)
-	arrReveal = func(a []any) {
-		for _, el := range a {
-			switch vv := el.(type) {
-			case []any:
-				arrReveal(vv)
-			case map[string]any:
-				r.Rewrite(vv)
-			}
+func (r Rewriter) Rewrite(m map[string]any) {
+	// start recursion-rewriter
+	r.rec(m)
+}
+
+func (r Rewriter) arrReveal(a []any) {
+	for _, el := range a {
+		switch vv := el.(type) {
+		case []any:
+			r.arrReveal(vv)
+		case map[string]any:
+			r.rec(vv)
 		}
 	}
+}
 
-	// TODO Goroutines
+func (r Rewriter) rec(m map[string]any) {
 	for key, value := range m {
 		switch vv := value.(type) {
 		case string:
-			if key == r.name &&
-				vv == r.value {
+			if key == r.name && vv == r.value {
 				m[key] = r.new
 			}
 		case map[string]any:
-			r.Rewrite(vv)
+			r.rec(vv)
 		case []any:
-			arrReveal(vv)
+			r.arrReveal(vv)
 		}
 	}
 }
