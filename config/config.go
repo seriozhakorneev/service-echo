@@ -45,8 +45,8 @@ type (
 	}
 )
 
-// NewConfig returns app config.
-func NewConfig() (*Config, error) {
+// New returns app config.
+func New() (*Config, error) {
 	cfg := &Config{}
 
 	err := cleanenv.ReadConfig("./config/config.yml", cfg)

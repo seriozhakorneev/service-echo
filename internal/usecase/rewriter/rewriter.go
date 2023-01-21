@@ -25,6 +25,7 @@ func New(cfg config.Rewriter) usecase.Rewriter {
 
 // Rewrite - rewrites data with rewrite rules
 func (r *Rewriter) Rewrite(m map[string]any) {
+	// TODO вынести
 	var arrReveal func(a []any)
 	arrReveal = func(a []any) {
 		for _, el := range a {
@@ -37,6 +38,7 @@ func (r *Rewriter) Rewrite(m map[string]any) {
 		}
 	}
 
+	// TODO Goroutines
 	for key, value := range m {
 		switch vv := value.(type) {
 		case string:
